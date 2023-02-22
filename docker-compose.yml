@@ -1,18 +1,6 @@
 version: '3.3'
 
 services:
-  leantime_db:
-    image: mysql:8.0
-    container_name: mysql_leantime
-    volumes:
-      - db_data:/var/lib/mysql
-    restart: unless-stopped
-    environment:
-      MYSQL_ROOT_PASSWORD: '321.qwerty'
-      MYSQL_DATABASE: 'leantime'
-      MYSQL_USER: 'admin'
-      MYSQL_PASSWORD: '321.qwerty'
-    command: --character-set-server=utf8 --collation-server=utf8_unicode_ci
 
   leantime:
     image: leantime/leantime:latest
@@ -33,10 +21,7 @@ services:
       - userfiles:/var/www/html/userfiles
     ports:
       - "8080:80"                                                       # The port to expose and access Leantime
-    depends_on:
-      - leantime_db                                                     # Don't start Leantime unless leantime_db is running
 
 volumes:
-  db_data:
   userfiles:
   public_userfiles:

@@ -11,11 +11,7 @@ RUN apk update && apk add --no-cache \
     openldap-dev\
     freetype libpng libjpeg-turbo freetype-dev libpng-dev libjpeg-turbo-dev oniguruma-dev \
     icu-libs \
-    jpegoptim optipng pngquant gifsicle \
-    supervisor \
-    apache2 \
-    apache2-ctl \
-    apache2-proxy
+    jpegoptim optipng pngquant gifsicle
 
 # Installing extensions
 RUN docker-php-ext-install mysqli pdo_mysql mbstring exif pcntl pdo bcmath opcache ldap
@@ -35,19 +31,10 @@ RUN chmod +x /start.sh
 
 COPY config/custom.ini /usr/local/etc/php/conf.d/custom.ini
 
-# Configure supervisord
-COPY config/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-COPY config/app.conf  /etc/apache2/conf.d/app.conf
-
-RUN sed -i '/LoadModule rewrite_module/s/^#//g' /etc/apache2/httpd.conf && \
-    sed -i 's#AllowOverride [Nn]one#AllowOverride All#' /etc/apache2/httpd.conf && \
-    sed -i '$iLoadModule proxy_module modules/mod_proxy.so' /etc/apache2/httpd.conf
-
 RUN mkdir -p "/sessions" && chown www-data:www-data /sessions && chmod 0777 /sessions
 VOLUME [ "/sessions" ]
 
 # Expose port 9000 and start php-fpm server
 ENTRYPOINT ["/start.sh"]
 EXPOSE 80
-
 
