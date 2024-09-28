@@ -38,4 +38,4 @@ else
 
 fi
 
-/usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
+php-fpm -F
